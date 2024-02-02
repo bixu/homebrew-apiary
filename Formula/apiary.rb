@@ -1,8 +1,8 @@
 class Apiary < Formula
   # Update these values as needed as new versions are released
-  current_version = "0.3.0"
+  current_version = "0.2.0"
   current_darwin_arm_sha256 = ""
-  current_darwin_intel_sha256 = ""
+  current_darwin_intel_sha256 = "5a7f175bc86c82e4c1f6abb6382cb9b6210d7cc036b3ac65120822f1f8f2bb68"
 
   on_macos do
     @source_os = "darwin"
