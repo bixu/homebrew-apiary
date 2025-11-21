@@ -1,0 +1,59 @@
+name: Update Tap
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-formula:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tap repository
+        uses: actions/checkout@v4
+        with:
+          repository: bixu/homebrew-apiary
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          path: homebrew-tap
+
+      - name: Get release assets
+        id: get-assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the release data
+          release_data=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/bixu/apiary/releases/latest")
+          
+          # Extract download URLs for the archives
+          intel_url=$(echo "$release_data" | jq -r '.assets[] | select(.name | contains("x86_64-apple-darwin.tar.gz")) | .browser_download_url')
+          arm_url=$(echo "$release_data" | jq -r '.assets[] | select(.name | contains("aarch64-apple-darwin.tar.gz")) | .browser_download_url')
+          version=$(echo "$release_data" | jq -r '.tag_name' | sed 's/^v//')
+          
+          # Download and calculate SHA256 for both archives
+          curl -L "$intel_url" -o intel-archive.tar.gz
+          curl -L "$arm_url" -o arm-archive.tar.gz
+          
+          intel_sha256=$(sha256sum intel-archive.tar.gz | cut -d' ' -f1)
+          arm_sha256=$(sha256sum arm-archive.tar.gz | cut -d' ' -f1)
+          
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "intel_sha256=$intel_sha256" >> $GITHUB_OUTPUT
+          echo "arm_sha256=$arm_sha256" >> $GITHUB_OUTPUT
+
+      - name: Update formula
+        run: |
+          cd homebrew-tap
+          
+          # Update the formula with new version and SHA256 values
+          sed -i "s/version '[^']*'/version '${{ steps.get-assets.outputs.version }}'/" Formula/apiary.rb
+          sed -i "s/sha256 'PLACEHOLDER_INTEL_SHA256'/sha256 '${{ steps.get-assets.outputs.intel_sha256 }}'/" Formula/apiary.rb
+          sed -i "s/sha256 'PLACEHOLDER_ARM_SHA256'/sha256 '${{ steps.get-assets.outputs.arm_sha256 }}'/" Formula/apiary.rb
+
+      - name: Commit and push changes
+        run: |
+          cd homebrew-tap
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/apiary.rb
+          git commit -m "Update apiary to version ${{ steps.get-assets.outputs.version }}"
+          git push
