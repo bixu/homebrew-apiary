@@ -42,9 +42,6 @@ jobs:
           else
             api_url="$release_url"
           fi
-
-          # Get the release data from the API URL
-          release_data=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$api_url"))
           
           echo "version=$version" >> $GITHUB_OUTPUT
           echo "sha256_aarch64_apple_darwin=$sha256_aarch64_apple_darwin" >> $GITHUB_OUTPUT
