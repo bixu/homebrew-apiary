@@ -12,7 +12,7 @@ Thereafter, you can stay up-to-date with the latest stable release by
 running:
 
 ```
-brew upgrade hab
+brew upgrade apiary
 ```
 
 If you no longer wish to use the Apiary tap, you can uninstall it:
