@@ -8,6 +8,12 @@ the following command (this is a one-time operation):
 brew tap bixu/apiary
 ```
 
+Then install Apiary:
+
+```
+brew install apiary
+```
+
 Thereafter, you can stay up-to-date with the latest stable release by
 running:
 
