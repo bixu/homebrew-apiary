@@ -8,13 +8,18 @@ class Apiary < Formula
   on_macos do
     on_intel do
       url "https://github.com/bixu/apiary/releases/download/v#{version}/apiary-x86_64-apple-darwin.tar.gz"
-      sha256 'foo'
+      sha256 'PLACEHOLDER_INTEL_SHA256'
     end
 
     on_arm do
       url "https://github.com/bixu/apiary/releases/download/v#{version}/apiary-aarch64-apple-darwin.tar.gz"
-      sha256 'bar'
+      sha256 'PLACEHOLDER_ARM_SHA256'
     end
+  end
+
+  on_linux do
+    url "https://github.com/bixu/apiary/releases/download/v#{version}/apiary-x86_64-unknown-linux-gnu.tar.gz"
+    sha256 'PLACEHOLDER_LINUX_SHA256'
   end
 
   def install

@@ -26,8 +26,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Use version from client payload
+          # Use versions and shas from client payload
           version="${{ github.event.client_payload.version }}"
+          sha256_aarch64_apple_darwin="${{ github.event.client_payload.sha256_aarch64_apple_darwin }}"
+          sha256_x86_64_apple_darwin="${{ github.event.client_payload.sha256_x86_64_apple_darwin }}"
+          sha256_x86_64_unknown_linux_gnu="${{ github.event.client_payload.sha256_x86_64_unknown_linux_gnu }}"
           
           # Convert HTML URL to API URL if needed
           release_url="${{ github.event.client_payload.release_url }}"
@@ -41,21 +44,12 @@ jobs:
           fi
 
           # Get the release data from the API URL
-          release_data=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$api_url")
-
-          # Extract download URLs for the archives
-          intel_url=$(echo "$release_data" | jq -r '.assets[] | select(.name | contains("x86_64-apple-darwin.tar.gz")) | .browser_download_url')
-          arm_url=$(echo "$release_data" | jq -r '.assets[] | select(.name | contains("aarch64-apple-darwin.tar.gz")) | .browser_download_url')
-          
-          # Download and calculate SHA256 for both archives
-          curl -L "$intel_url" -o intel-archive.tar.gz
-          curl -L "$arm_url" -o arm-archive.tar.gz
-
-          intel_sha256=$(sha256sum intel-archive.tar.gz | cut -d' ' -f1)
-          arm_sha256=$(sha256sum arm-archive.tar.gz | cut -d' ' -f1)
+          release_data=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$api_url"))
           
           echo "version=$version" >> $GITHUB_OUTPUT
-          echo "intel_sha256=$intel_sha256" >> $GITHUB_OUTPUT
+          echo "sha256_aarch64_apple_darwin=$sha256_aarch64_apple_darwin" >> $GITHUB_OUTPUT
+          echo "sha256_x86_64_apple_darwin=$sha256_x86_64_apple_darwin" >> $GITHUB_OUTPUT
+          echo "sha256_x86_64_unknown_linux_gnu=$sha256_x86_64_unknown_linux_gnu" >> $GITHUB_OUTPUT
           echo "arm_sha256=$arm_sha256" >> $GITHUB_OUTPUT
 
       - name: Update formula
@@ -64,8 +58,9 @@ jobs:
 
           # Update the formula with new version and SHA256 values
           sed -i "s/version '[^']*'/version '${{ steps.get-assets.outputs.version }}'/" Formula/apiary.rb
-          sed -i "s/sha256 'PLACEHOLDER_INTEL_SHA256'/sha256 '${{ steps.get-assets.outputs.intel_sha256 }}'/" Formula/apiary.rb
-          sed -i "s/sha256 'PLACEHOLDER_ARM_SHA256'/sha256 '${{ steps.get-assets.outputs.arm_sha256 }}'/" Formula/apiary.rb
+          sed -i "s/sha256 'PLACEHOLDER_ARM_SHA256'/sha256 '${{ steps.get-assets.outputs.sha256_aarch64_apple_darwin }}'/" Formula/apiary.rb
+          sed -i "s/sha256 'PLACEHOLDER_INTEL_SHA256'/sha256 '${{ steps.get-assets.outputs.sha256_x86_64_apple_darwin }}'/" Formula/apiary.rb
+          sed -i "s/sha256 'PLACEHOLDER_LINUX_SHA256'/sha256 '${{ steps.get-assets.outputs.sha256_x86_64_unknown_linux_gnu }}'/" Formula/apiary.rb
 
       - name: Commit and push changes
         run: |
