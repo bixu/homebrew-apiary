@@ -20,14 +20,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Get the release data
+          # Use version from client payload
+          version="${{ github.event.client_payload.version }}"
+
+          # Get the release data from the provided release URL
           release_data=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/repos/bixu/apiary/releases/latest")
+            "${{ github.event.client_payload.release_url }}")
           
           # Extract download URLs for the archives
           intel_url=$(echo "$release_data" | jq -r '.assets[] | select(.name | contains("x86_64-apple-darwin.tar.gz")) | .browser_download_url')
           arm_url=$(echo "$release_data" | jq -r '.assets[] | select(.name | contains("aarch64-apple-darwin.tar.gz")) | .browser_download_url')
-          version=$(echo "$release_data" | jq -r '.tag_name' | sed 's/^v//')
           
           # Download and calculate SHA256 for both archives
           curl -L "$intel_url" -o intel-archive.tar.gz
