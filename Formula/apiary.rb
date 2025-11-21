@@ -2,7 +2,7 @@
 class Apiary < Formula
   desc 'Comprehensive CLI for Honeycomb API with dual authentication'
   homepage 'https://github.com/bixu/apiary'
-  version '0.3.3'
+  version 'v0.3.0'
   license 'MIT'
 
   on_macos do
