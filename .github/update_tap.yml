@@ -1,8 +1,9 @@
 name: Update Tap
 
+# The new trigger should be:
 on:
-  release:
-    types: [published]
+  repository_dispatch:
+    types: [update-formula]
 
 jobs:
   update-formula:
