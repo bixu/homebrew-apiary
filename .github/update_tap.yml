@@ -8,6 +8,12 @@ jobs:
   update-formula:
     runs-on: ubuntu-latest
     steps:
+      - name: Debug payload  
+        run: |
+          echo "Event type: ${{ github.event.action }}"
+          echo "Version: ${{ github.event.client_payload.version }}"
+          echo "Release URL: ${{ github.event.client_payload.release_url }}"
+
       - name: Checkout tap repository
         uses: actions/checkout@v4
         with:
