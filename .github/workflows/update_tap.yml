@@ -55,9 +55,9 @@ jobs:
 
           # Update the formula with new version and SHA256 values
           sed -i "s/version '[^']*'/version '${{ steps.get-assets.outputs.version }}'/" Formula/apiary.rb
-          sed -i "s/sha256 'PLACEHOLDER_ARM_SHA256'/sha256 '${{ steps.get-assets.outputs.sha256_aarch64_apple_darwin }}'/" Formula/apiary.rb
-          sed -i "s/sha256 'PLACEHOLDER_INTEL_SHA256'/sha256 '${{ steps.get-assets.outputs.sha256_x86_64_apple_darwin }}'/" Formula/apiary.rb
-          sed -i "s/sha256 'PLACEHOLDER_LINUX_SHA256'/sha256 '${{ steps.get-assets.outputs.sha256_x86_64_unknown_linux_gnu }}'/" Formula/apiary.rb
+          sed -i "/on_arm/,/end/s/sha256 '[0-9a-f]\{64\}'/sha256 '${{ steps.get-assets.outputs.sha256_aarch64_apple_darwin }}'/" Formula/apiary.rb
+          sed -i "/on_intel/,/end/s/sha256 '[0-9a-f]\{64\}'/sha256 '${{ steps.get-assets.outputs.sha256_x86_64_apple_darwin }}'/" Formula/apiary.rb
+          sed -i "/on_linux/,/end/s/sha256 '[0-9a-f]\{64\}'/sha256 '${{ steps.get-assets.outputs.sha256_x86_64_unknown_linux_gnu }}'/" Formula/apiary.rb
 
       - name: Commit and push changes
         run: |
