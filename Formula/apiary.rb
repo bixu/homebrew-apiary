@@ -28,6 +28,6 @@ class Apiary < Formula
 
   test do
     system "#{bin}/apiary", '--help'
-    assert_match 'A comprehensive CLI for Honeycomb API', shell_output("#{bin}/apiary --help")
+    assert_match 'A CLI for the Honeycomb API', shell_output("#{bin}/apiary --help")
   end
 end
