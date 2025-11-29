@@ -1,6 +1,6 @@
 # Homebrew Formula for Apiary CLI
 class Apiary < Formula
-  desc 'Comprehensive CLI for Honeycomb API with dual authentication'
+  desc 'A CLI for the Honeycomb API'
   homepage 'https://github.com/bixu/apiary'
   version '0.4.10'
   license 'MIT'
