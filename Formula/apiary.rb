@@ -3,7 +3,7 @@ class Apiary < Formula
   desc 'A CLI for the Honeycomb API'
   homepage 'https://github.com/bixu/apiary'
   version '0.4.10'
-  license 'MIT'
+  license 'Apache 2'
 
   on_macos do
     on_intel do
