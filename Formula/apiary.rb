@@ -2,24 +2,24 @@
 class Apiary < Formula
   desc 'A CLI for the Honeycomb API'
   homepage 'https://github.com/bixu/apiary'
-  version '0.4.11'
+  version '0.5.0'
   license 'Apache 2'
 
   on_macos do
     on_intel do
       url "https://github.com/bixu/apiary/releases/download/#{version}/apiary-x86_64-apple-darwin.tar.gz"
-      sha256 'e6657aa960cd1d7ebb6c56e5cc3d3ad1d1ab12eb45999ec54f938c7ea7c71925'
+      sha256 '47ccb465a636a8a3b7acc851412914f0d334263a8ef3f6afdefd1bfb6e650670'
     end
 
     on_arm do
       url "https://github.com/bixu/apiary/releases/download/#{version}/apiary-aarch64-apple-darwin.tar.gz"
-      sha256 'ad3036e9c2583b2a632d2c894ee233ca615d2b7704b314c4afab4ebb9de3a42c'
+      sha256 '6f631c72e9ca73c1b64112489c90a8c1fa0b01ce7e86063c771ec8467f03f3ca'
     end
   end
 
   on_linux do
     url "https://github.com/bixu/apiary/releases/download/#{version}/apiary-x86_64-unknown-linux-gnu.tar.gz"
-    sha256 'e8926bbd4c0c70c64c753a127ff6ad89f627039846f912bdad56f67437661ec1'
+    sha256 '1bef40a3fcade8edbbb49c1cbc6726581ef9464d68d02c7d98f4b75e47d09d72'
   end
 
   def install
